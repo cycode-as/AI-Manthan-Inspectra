@@ -1,0 +1,26 @@
+project:
+  name: Inspectra
+  version: 2.0
+
+model:
+  name: PatchCore
+  image_size: 256
+  batch_size: 4
+  random_seed: 42
+
+categories:
+  - metal
+  - textile
+  - electronics
+  - other
+
+inference:
+  save_anomaly_maps: true
+  return_anomaly_score: true
+
+evaluation:
+  metrics:
+    - image_auroc
+    - precision
+    - recall
+    - f1_score
