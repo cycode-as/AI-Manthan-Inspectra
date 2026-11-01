@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>INSPECTRA 2.0 - New Inspection &amp; AI Detection Visualization</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Rubik & Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#233146",
+            "on-secondary-fixed": "#00174b",
+            "background": "#f9f9ff",
+            "surface-container-highest": "#d5e3ff",
+            "surface-tint": "#4c5e83",
+            "error-container": "#ffdad6",
+            "surface-dim": "#ccdbf6",
+            "secondary-container": "#316bf3",
+            "primary": "#001637",
+            "surface-bright": "#f9f9ff",
+            "outline": "#75777f",
+            "on-primary-container": "#8093bb",
+            "surface-container-low": "#f0f3ff",
+            "on-tertiary-fixed": "#280056",
+            "error": "#ba1a1a",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#44474e",
+            "secondary": "#0051d5",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "surface-container": "#e7eeff",
+            "on-secondary-container": "#fefcff",
+            "tertiary": "#22004b",
+            "tertiary-container": "#3c007d",
+            "on-secondary-fixed-variant": "#003ea8",
+            "primary-fixed": "#d7e2ff",
+            "secondary-fixed": "#dbe1ff",
+            "surface-variant": "#d5e3ff",
+            "primary-fixed-dim": "#b4c7f1",
+            "tertiary-fixed": "#ecdcff",
+            "primary-container": "#172b4d",
+            "tertiary-fixed-dim": "#d6baff",
+            "on-background": "#0d1c30",
+            "surface-container-high": "#dee9ff",
+            "on-tertiary-fixed-variant": "#5b24a5",
+            "surface": "#f9f9ff",
+            "inverse-primary": "#b4c7f1",
+            "on-error": "#ffffff",
+            "on-primary-fixed-variant": "#34476a",
+            "inverse-on-surface": "#ebf1ff",
+            "outline-variant": "#c5c6cf",
+            "on-primary": "#ffffff",
+            "on-primary-fixed": "#041b3c",
+            "secondary-fixed-dim": "#b4c5ff",
+            "on-surface": "#0d1c30",
+            "on-tertiary-container": "#ab78f8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "gutter": "1rem",
+            "gutter-desktop": "1.5rem",
+            "margin-desktop": "2rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "margin": "1rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "tech-data-md": ["Space Mono"],
+            "headline-md": ["Rubik"],
+            "headline-sm": ["Rubik"],
+            "tech-data-sm": ["Space Mono"],
+            "tech-data-lg": ["Space Mono"],
+            "body-md": ["Rubik"],
+            "body-sm": ["Rubik"],
+            "headline-xl": ["Rubik"],
+            "label-caps": ["Rubik"],
+            "body-lg": ["Rubik"],
+            "headline-lg": ["Rubik"]
+          },
+          "fontSize": {
+            "tech-data-md": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+            "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+            "headline-sm": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+            "tech-data-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+            "tech-data-lg": ["16px", {"lineHeight": "20px", "fontWeight": "700"}],
+            "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+            "headline-xl": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+            "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .hud-grid-pattern {
+      background-size: 20px 20px;
+      background-image: 
+        linear-gradient(to right, rgba(0, 81, 213, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 81, 213, 0.05) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col font-body-md text-body-md selection:bg-secondary-fixed selection:text-on-secondary-fixed pb-24">
+<!-- TOP APP BAR (Shared Component Anchor) -->
+<header class="sticky top-0 z-40 bg-surface shadow-sm w-full px-space-md py-space-sm flex justify-between items-center border-b border-outline-variant">
+<div class="flex items-center space-x-3">
+<!-- Brand Logo / Identity -->
+<div class="flex items-center space-x-2">
+<img alt="Inspectra 2.0 Industrial Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XlJqTIuvS6xkSmbKXq-PDS5pp6XBaLTFQZS-37DfYoA_2-NwDsk2R1nXeHESCQTsA6NJErpeLSYewgitIcUhQUFI2_QZvPeqHJIWNaPyE_L3INavwianKdmTESubJzVJ2M0tEmDNpsP53_gz9UWVjmum26xEtVirPjauRbEEju9p15J2FmaIrrNVP6XkY-w5NAh89yGx89_ONV5CoY90myVK1shAhHMJ_-yJUV0ZFA"/>
+<span class="hidden sm:inline-block font-headline-sm text-headline-sm font-semibold text-primary uppercase tracking-wider">INSPECTRA 2.0</span>
+</div>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<div class="flex items-center space-x-1 font-tech-data-sm text-tech-data-sm text-on-surface-variant">
+<span class="text-outline">INSPECTION</span>
+<span class="text-outline">/</span>
+<span class="text-secondary font-semibold">QC-8842</span>
+</div>
+</div>
+<!-- Status & Avatar -->
+<div class="flex items-center space-x-3">
+<!-- Live Status Chip -->
+<div class="hidden sm:flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-surface-container border border-outline-variant font-tech-data-sm text-tech-data-sm text-on-surface">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="font-medium tracking-tight">SYSTEM OPERATIONAL</span>
+</div>
+<!-- Avatar & Action Menu -->
+<div class="flex items-center space-x-2">
+<div class="relative w-8 h-8 rounded-full border border-outline-variant bg-surface-container overflow-hidden flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="Close up professional portrait of a senior quality assurance engineer in cleanroom safety attire wearing protective glasses against a subtle industrial laboratory background with cool clinical illumination" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6Vowxb_0MchioC475E34rLvsGoD_KOUey3onjIqSZGJDvcB2cayw2SV3qpd54z2Pm2sRBwe76QCu2vJ9N0eVFrfIDgSDudvDK-LCouptBFoDCJZ6TGsrTzYVaabmGGXuj5gMFRDkqFeUfXbD6I86RYVQvhT2IsDHUQNqgX2FryUQTOXXt64dJ1bp3-WLZdLZs-M0_UseSh3freRqWRzcoxzfEXtIs_zma-yXxc8Q"/>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN VIEWPORT CONTAINER -->
+<main class="w-full max-w-5xl mx-auto px-space-md py-space-md flex-1 flex flex-col space-y-space-md">
+<!-- SECTION 1: Active Inspection Setup & Input -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-4 space-y-3">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-outline-variant pb-3">
+<div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="biotech">biotech</span>
+<h1 class="font-headline-md text-headline-md font-semibold text-primary tracking-tight">New Quality Inspection</h1>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Upload a product image to identify and localize potential manufacturing defects.
+          </p>
+</div>
+<div class="flex items-center space-x-1 self-start sm:self-center bg-surface-container-low px-2 py-1 rounded border border-outline-variant">
+<span class="material-symbols-outlined text-xs text-outline" data-icon="schedule">schedule</span>
+<span class="font-tech-data-sm text-tech-data-sm text-outline">SESSION ACTIVE: 14:02:49 UTC</span>
+</div>
+</div>
+<!-- Category Filter Pills -->
+<div class="flex items-center space-x-2 overflow-x-auto py-1">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant mr-1">TARGET TYPE:</span>
+<button class="px-3 py-1 rounded text-xs font-medium font-body-sm transition-colors bg-secondary text-on-secondary shadow-sm flex items-center space-x-1" type="button">
+<span class="material-symbols-outlined text-xs" data-icon="check">check</span>
+<span>Metal Components</span>
+</button>
+<button class="px-3 py-1 rounded text-xs font-medium font-body-sm transition-colors bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant" type="button">
+          Textiles
+        </button>
+<button class="px-3 py-1 rounded text-xs font-medium font-body-sm transition-colors bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant" type="button">
+          Electronics
+        </button>
+<button class="px-3 py-1 rounded text-xs font-medium font-body-sm transition-colors bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant" type="button">
+          Other
+        </button>
+</div>
+<!-- Selected Image Metadata Banner -->
+<div class="bg-surface-container-low rounded-lg p-2.5 border border-outline-variant flex flex-wrap items-center gap-x-4 gap-y-2 text-on-surface font-tech-data-sm text-tech-data-sm">
+<div class="flex items-center space-x-1">
+<span class="text-outline">PART NO:</span>
+<span class="font-semibold text-primary bg-surface px-1.5 py-0.5 rounded border border-outline-variant">CNC-S450-CYLINDER</span>
+</div>
+<div class="flex items-center space-x-1">
+<span class="text-outline">RES:</span>
+<span class="font-semibold text-on-surface">1200x896</span>
+</div>
+<div class="flex items-center space-x-1">
+<span class="text-outline">MODEL:</span>
+<span class="font-semibold text-secondary">YOLOv8-QC-v2.4</span>
+</div>
+<div class="flex items-center space-x-1">
+<span class="text-outline">INSPECTION MODE:</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded font-bold bg-surface-container-highest text-secondary border border-secondary-container">
+            HIGH PRECISION
+          </span>
+</div>
+</div>
+</section>
+<!-- SECTION 2: AI Detection Visualization (THE SIGNATURE FEATURE) -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+<!-- Viewport Header Toolbar -->
+<div class="px-4 py-2.5 bg-surface border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" data-icon="center_focus_strong">center_focus_strong</span>
+<span class="font-headline-sm text-headline-sm font-semibold text-primary">Optical Viewport: Telemetry &amp; Bounding Annotations</span>
+</div>
+<div class="flex items-center space-x-2 font-tech-data-sm text-tech-data-sm">
+<span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-on-surface-variant flex items-center space-x-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>AOI LIVE STREAM</span>
+</span>
+<span class="hidden sm:inline-block text-outline">FRAME #4812</span>
+</div>
+</div>
+<!-- Viewport Graphic Canvas with HUD Overlay -->
+<div class="relative w-full bg-primary overflow-hidden flex items-center justify-center min-h-[380px] max-h-[560px]">
+<!-- Component Photo Inspection Feed -->
+<img class="w-full h-auto object-cover object-center max-h-[560px] select-none" data-alt="Macro optical quality control photograph of a precision-machined steel cylinder part positioned on an inspection grid board with a digital micrometer caliper alongside, crisp mechanical textures under clean bright industrial lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc7ggtt4PTnCsSIo7YGR0uf4177ERLMcFL-h7fklnNdrB-xscTVeTMN7lLX7SbKz8BLOB-e2LBH2RA0upEyKmHveZUiM75szSYTchlsbD7uoJgPurR4eiruNAQ8mmzzz1TB5tLlu8dENREnCeseakBV49ZRnozunYFReSGt-FGmRCFSdpnIwMDVnO-dPW_Az3qByuo9sdNX2cpGxK-zKU9Te6zAqiqtfm5b5QXHoE"/>
+<!-- Technical Reticle Overlay Canvas (Grid & Alignment ticks) -->
+<div class="absolute inset-0 pointer-events-none hud-grid-pattern opacity-60"></div>
+<!-- HUD Top Right Crosshair & Live Zoom -->
+<div class="absolute top-3 right-3 pointer-events-none flex flex-col items-end space-y-1">
+<div class="bg-primary/80 backdrop-blur text-surface px-2 py-1 rounded border border-outline-variant font-tech-data-sm text-tech-data-sm flex items-center space-x-2 shadow-sm">
+<span class="material-symbols-outlined text-sm text-secondary-fixed" data-icon="filter_center_focus">filter_center_focus</span>
+<span>RETICLE: CALIBRATED</span>
+<span class="text-secondary-fixed font-bold">1.0x</span>
+</div>
+<div class="font-tech-data-sm text-[10px] text-surface-dim font-mono">OPTICAL SENSOR: 8.4 MP</div>
+</div>
+<!-- Bounding Box 01: Critical Surface Scratch (Red) -->
+<!-- Coordinates: [X: 412, Y: 388, W: 110, H: 64] scaled responsively -->
+<div class="absolute top-[44%] left-[45%] w-[24%] h-[18%] border-2 border-red-500 bg-red-500/10 pointer-events-auto transition-all group">
+<!-- High-tech Corner Ticks -->
+<div class="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-red-600"></div>
+<div class="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-red-600"></div>
+<div class="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-red-600"></div>
+<div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-red-600"></div>
+<!-- Attached Tag Top-Left -->
+<div class="absolute -top-7 -left-0.5 bg-red-600 text-surface-container-lowest px-1.5 py-0.5 rounded-t font-tech-data-sm text-tech-data-sm font-bold flex items-center space-x-1 shadow-md whitespace-nowrap">
+<span class="material-symbols-outlined text-xs" data-icon="report">report</span>
+<span>DEFECT 01 | SURFACE SCRATCH</span>
+<span class="bg-red-900/60 px-1 rounded ml-1 text-white">0.942</span>
+</div>
+<!-- Monospace Coordinates Floating Tag -->
+<div class="absolute -bottom-5 right-0 bg-primary/90 text-surface-dim px-1.5 py-0.5 font-tech-data-sm text-[10px] rounded border border-red-500/40">
+            [X:412 Y:388 W:110 H:64]
+          </div>
+</div>
+<!-- Bounding Box 02: Suspicious Micro-Pit (Amber) -->
+<div class="absolute top-[38%] left-[28%] w-[14%] h-[15%] border-2 border-amber-500 bg-amber-500/10 pointer-events-auto transition-all">
+<!-- Corner Ticks -->
+<div class="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-amber-500"></div>
+<div class="absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 border-amber-500"></div>
+<div class="absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 border-amber-500"></div>
+<div class="absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 border-amber-500"></div>
+<!-- Tag Top-Left -->
+<div class="absolute -top-7 -left-0.5 bg-amber-500 text-primary font-bold px-1.5 py-0.5 rounded-t font-tech-data-sm text-tech-data-sm flex items-center space-x-1 shadow-md whitespace-nowrap">
+<span class="material-symbols-outlined text-xs" data-icon="warning">warning</span>
+<span>REGION 02 | MICRO PIT</span>
+<span class="bg-amber-800 text-white px-1 rounded text-[10px]">0.618</span>
+</div>
+</div>
+<!-- Measurement Axes Calibration HUD Overlay -->
+<div class="absolute bottom-2 left-2 bg-primary/70 backdrop-blur px-2 py-1 rounded text-surface-dim font-tech-data-sm text-[10px] flex items-center space-x-2 border border-outline/30">
+<span>PITCH: 0.01mm/div</span>
+<span>|</span>
+<span>ROI: ACTIVE [CYLINDER_SURF]</span>
+</div>
+</div>
+<!-- Viewport Technical Toggle Bar -->
+<div class="bg-surface px-4 py-2 border-t border-b border-outline-variant flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center space-x-1">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant mr-2">LAYERS:</span>
+<button class="px-2.5 py-1 text-xs font-medium rounded bg-secondary text-on-secondary shadow-sm flex items-center space-x-1 font-body-sm" type="button">
+<span class="material-symbols-outlined text-xs" data-icon="check_box">check_box</span>
+<span>Defect Bounding Boxes</span>
+</button>
+<button class="px-2.5 py-1 text-xs font-medium rounded bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant flex items-center space-x-1 font-body-sm" type="button">
+<span class="material-symbols-outlined text-xs" data-icon="blur_on">blur_on</span>
+<span>Heatmap Overlay</span>
+</button>
+<button class="px-2.5 py-1 text-xs font-medium rounded bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant flex items-center space-x-1 font-body-sm" type="button">
+<span class="material-symbols-outlined text-xs" data-icon="visibility">visibility</span>
+<span>Original Reference</span>
+</button>
+</div>
+<!-- Quick Zoom / Fullscreen micro controls -->
+<div class="flex items-center space-x-1">
+<button class="p-1 rounded hover:bg-surface-container border border-outline-variant text-on-surface-variant" title="Zoom In">
+<span class="material-symbols-outlined text-sm" data-icon="zoom_in">zoom_in</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container border border-outline-variant text-on-surface-variant" title="Zoom Out">
+<span class="material-symbols-outlined text-sm" data-icon="zoom_out">zoom_out</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container border border-outline-variant text-on-surface-variant" title="Reset View">
+<span class="material-symbols-outlined text-sm" data-icon="restart_alt">restart_alt</span>
+</button>
+</div>
+</div>
+<!-- Severity Threshold Legend Bar -->
+<div class="px-4 py-2 bg-surface-container-low flex flex-wrap items-center justify-between text-xs gap-3 font-tech-data-sm text-tech-data-sm">
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-1.5">
+<span class="w-3 h-3 rounded-sm bg-red-600 inline-block border border-red-700"></span>
+<span class="font-medium text-on-surface">High Severity Anomaly (&gt;0.85)</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="w-3 h-3 rounded-sm bg-amber-500 inline-block border border-amber-600"></span>
+<span class="font-medium text-on-surface">Suspicious Region (0.50-0.85)</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="w-3 h-3 rounded-sm bg-emerald-500 inline-block border border-emerald-600"></span>
+<span class="font-medium text-on-surface">Nominal Tolerance (&lt;0.50)</span>
+</div>
+</div>
+<div class="text-outline">
+          CLASSIFIER VER: 2.4.19-PROD
+        </div>
+</div>
+</section>
+<!-- SECTION 3: Inspection Results & Decision Panel -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-5 space-y-4">
+<!-- Prominent Decision Banner -->
+<div class="rounded-lg border-2 border-red-500 bg-red-50 p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-start space-x-3">
+<div class="p-2 bg-red-600 text-white rounded-lg shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" data-icon="cancel">cancel</span>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-headline-lg text-headline-lg font-bold text-red-700 tracking-tight">DECISION: REJECT</span>
+<span class="px-2 py-0.5 bg-red-200 text-red-800 rounded font-label-caps text-label-caps uppercase font-bold">OUT OF SPEC</span>
+</div>
+<p class="font-body-md text-body-md text-red-950 mt-1">
+              Anomalous visual patterns were identified in the inspected cylindrical surface region exceeding tolerance threshold (0.45).
+            </p>
+</div>
+</div>
+<div class="self-start md:self-center shrink-0">
+<div class="text-right hidden md:block">
+<div class="font-tech-data-sm text-tech-data-sm text-red-800 font-semibold uppercase">ACTION REQUIRED</div>
+<div class="font-tech-data-sm text-tech-data-sm text-red-700">TRANSFER TO QA REWORK BAY</div>
+</div>
+</div>
+</div>
+<!-- Telemetry Metric Grid (Strict Industrial Layout) -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+<!-- Metric Card 1 -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">OVERALL ANOMALY SCORE</span>
+<div class="mt-2 flex items-baseline space-x-1">
+<span class="font-tech-data-lg text-tech-data-lg text-red-600 font-bold">0.942</span>
+<span class="font-tech-data-sm text-tech-data-sm text-outline">/ 1.000</span>
+</div>
+<div class="w-full bg-outline-variant/40 rounded-full h-1.5 mt-2 overflow-hidden">
+<div class="bg-red-600 h-full rounded-full" style="width: 94.2%"></div>
+</div>
+</div>
+<!-- Metric Card 2 -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">DETECTED DEFECT COUNT</span>
+<div class="mt-2 flex items-baseline space-x-1">
+<span class="font-tech-data-lg text-tech-data-lg text-primary font-bold">2</span>
+<span class="font-tech-data-sm text-tech-data-sm text-on-surface-variant">Regions</span>
+</div>
+<span class="font-tech-data-sm text-tech-data-sm text-red-600 font-medium mt-1">1 Critical, 1 Suspicious</span>
+</div>
+<!-- Metric Card 3 -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">INFERENCE TIME</span>
+<div class="mt-2 flex items-baseline space-x-1">
+<span class="font-tech-data-lg text-tech-data-lg text-secondary font-bold">42.8</span>
+<span class="font-tech-data-sm text-tech-data-sm text-outline">ms</span>
+</div>
+<span class="font-tech-data-sm text-tech-data-sm text-outline mt-1 truncate">FastAPI + TensorRT</span>
+</div>
+<!-- Metric Card 4 -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">ACCEPTANCE THRESHOLD</span>
+<div class="mt-2 flex items-baseline space-x-1">
+<span class="font-tech-data-lg text-tech-data-lg text-primary font-bold">≤ 0.450</span>
+</div>
+<span class="font-tech-data-sm text-tech-data-sm text-red-700 font-semibold mt-1">Δ +0.492 Deviation</span>
+</div>
+</div>
+<!-- Action Buttons Row -->
+<div class="pt-2 border-t border-outline-variant flex flex-col sm:flex-row items-center gap-3">
+<button class="w-full sm:w-auto px-6 py-2.5 bg-secondary hover:bg-secondary-container active:bg-on-secondary-fixed-variant text-on-secondary rounded-lg font-headline-sm text-headline-sm font-semibold flex items-center justify-center space-x-2 shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="add_circle">add_circle</span>
+<span>RUN NEW INSPECTION</span>
+</button>
+<div class="flex items-center space-x-2 w-full sm:w-auto flex-1 sm:justify-end">
+<button class="w-full sm:w-auto px-4 py-2.5 bg-surface-container-lowest hover:bg-surface-container text-on-surface border border-outline-variant rounded-lg font-body-sm text-body-sm font-medium flex items-center justify-center space-x-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span>Download Full QC Report (PDF)</span>
+</button>
+<button class="w-full sm:w-auto px-4 py-2.5 bg-surface-container-lowest hover:bg-surface-container text-on-surface border border-outline-variant rounded-lg font-body-sm text-body-sm font-medium flex items-center justify-center space-x-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="data_object">data_object</span>
+<span>Export JSON Telemetry</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BOTTOM NAVIGATION BAR (Shared Component Anchor) -->
+<!-- Contextual tab logic: Current active destination is 'Inspect' (center_focus_strong) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-sm py-space-xs bg-surface-container-lowest border-t border-outline-variant shadow-[0_-1px_3px_rgba(23,43,77,0.04)]">
+<!-- Tab 1: Overview -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-space-sm py-space-xs hover:bg-surface-container-low transition-colors rounded-lg" href="#overview">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps uppercase mt-0.5">Overview</span>
+</a>
+<!-- Tab 2: Inspect (ACTIVE STATE AS SPECIFIED IN JSON) -->
+<a class="flex flex-col items-center justify-center bg-surface-container text-secondary rounded-lg px-space-sm py-space-xs font-semibold shadow-xs" href="#inspect">
+<span class="material-symbols-outlined text-xl" data-icon="center_focus_strong" data-weight="fill" style="font-variation-settings: 'FILL' 1;">center_focus_strong</span>
+<span class="font-label-caps text-label-caps uppercase mt-0.5">Inspect</span>
+</a>
+<!-- Tab 3: History -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-space-sm py-space-xs hover:bg-surface-container-low transition-colors rounded-lg" href="#history">
+<span class="material-symbols-outlined text-xl" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps uppercase mt-0.5">History</span>
+</a>
+<!-- Tab 4: Analytics -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-space-sm py-space-xs hover:bg-surface-container-low transition-colors rounded-lg" href="#analytics">
+<span class="material-symbols-outlined text-xl" data-icon="analytics">analytics</span>
+<span class="font-label-caps text-label-caps uppercase mt-0.5">Analytics</span>
+</a>
+<!-- Tab 5: Metrics -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-space-sm py-space-xs hover:bg-surface-container-low transition-colors rounded-lg" href="#metrics">
+<span class="material-symbols-outlined text-xl" data-icon="tune">tune</span>
+<span class="font-label-caps text-label-caps uppercase mt-0.5">Metrics</span>
+</a>
+</nav>
+</body></html>
