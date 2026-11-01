@@ -1,0 +1,169 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: none;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+.button svg {
+  flex-shrink: 0;
+  transition: transform var(--transition-base);
+}
+
+.button:hover svg {
+  transform: scale(1.1);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.button:disabled:hover svg {
+  transform: none;
+}
+
+/* Primary variant - teal gradient */
+.button.primary {
+  background: linear-gradient(135deg, var(--color-primary-teal), var(--color-dark-teal));
+  color: white;
+  box-shadow: 0 4px 12px rgba(22, 140, 131, 0.3);
+}
+
+.button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 140, 131, 0.4);
+}
+
+.button.primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary variant - teal background */
+.button.secondary {
+  background: var(--color-pale-teal);
+  color: var(--color-dark-teal);
+  border: 1.5px solid rgba(22, 140, 131, 0.3);
+}
+
+.button.secondary:hover {
+  background: var(--color-active-bg);
+  border-color: var(--color-primary-teal);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 140, 131, 0.2);
+}
+
+.button.secondary:active {
+  transform: translateY(0);
+}
+
+/* Danger variant - coral/red */
+.button.danger {
+  background: linear-gradient(135deg, var(--color-primary-coral), var(--color-danger));
+  color: white;
+  box-shadow: 0 4px 12px rgba(220, 107, 107, 0.3);
+}
+
+.button.danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 107, 107, 0.4);
+}
+
+.button.danger:active {
+  transform: translateY(0);
+}
+
+/* Ghost variant - transparent */
+.button.ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--color-border);
+}
+
+.button.ghost:hover {
+  background: var(--color-hover-bg);
+  color: var(--color-text);
+  border-color: var(--color-primary-teal);
+}
+
+/* Icon button */
+.button.icon-only {
+  padding: 10px;
+  border-radius: var(--radius-md);
+}
+
+/* Sizes */
+.button.small {
+  padding: 8px 16px;
+  font-size: 13px;
+  gap: 6px;
+}
+
+.button.small.icon-only {
+  padding: 8px;
+}
+
+.button.large {
+  padding: 14px 32px;
+  font-size: 15px;
+  gap: 10px;
+}
+
+.button.large.icon-only {
+  padding: 14px;
+}
+
+/* Full width */
+.button.full-width {
+  width: 100%;
+}
+
+/* Loading state */
+.button.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.button.loading svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -17,3 +17,24 @@ runs/
 *.tmp
 *.log
 .env
+*.py[cod]
+.env
+*.db
+.pytest_cache/
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Cache and generated files
+.vite/
+coverage/
+__pycache__/
+*.pyc
