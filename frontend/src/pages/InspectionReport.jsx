@@ -236,7 +236,7 @@ const InspectionReport = () => {
                 />
               </div>
             )}
-            {heatmapImageUrl && (
+            {heatmapImageUrl ? (
               <div className="report-image-container">
                 <h3 className="image-label">AI Detection Heatmap</h3>
                 <img 
@@ -245,6 +245,15 @@ const InspectionReport = () => {
                   className="report-image"
                   onError={(e) => e.target.style.display = 'none'}
                 />
+              </div>
+            ) : (
+              <div className="report-image-container">
+                <h3 className="image-label">AI Detection Heatmap</h3>
+                <div style={{ padding: '24px 16px', background: 'var(--color-hover-bg, #f5f5f5)', border: '1px solid var(--color-border, #e0e0e0)', borderRadius: '6px', textAlign: 'center' }}>
+                  <p className="body-sm text-muted" style={{ margin: 0 }}>
+                    Spatial heatmap localization unavailable. Quality decision is determined by the global anomaly score ({formatAnomalyScore(inspection.anomaly_score || inspection.anomalyScore)}).
+                  </p>
+                </div>
               </div>
             )}
           </div>

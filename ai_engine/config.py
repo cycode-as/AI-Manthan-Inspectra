@@ -1,5 +1,4 @@
-﻿from pathlib import Path
-import torch
+from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -18,4 +17,9 @@ CATEGORIES = [
 
 MODEL_VERSION = "patchcore-v1"
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+try:
+    import torch
+    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+except ImportError:
+    torch = None
+    DEVICE = "cpu"

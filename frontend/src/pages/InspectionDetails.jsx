@@ -44,7 +44,6 @@ const InspectionDetails = () => {
   };
 
   const handleDownloadReport = () => {
-    // Navigate to report page which handles PDF generation
     navigate(`/report/${id}`);
   };
 
@@ -219,7 +218,7 @@ const InspectionDetails = () => {
                     className="inspection-image"
                     onError={(e) => {
                       e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
+                      if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
                     }}
                   />
                   <div className="image-unavailable" style={{ display: 'none' }}>
@@ -248,18 +247,24 @@ const InspectionDetails = () => {
                     className="inspection-image"
                     onError={(e) => {
                       e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
+                      if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
                     }}
                   />
                   <div className="image-unavailable" style={{ display: 'none' }}>
                     <AlertCircle size={32} />
-                    <span>Heatmap unavailable</span>
+                    <span>Heatmap localization unavailable</span>
+                    <p className="body-sm text-muted" style={{ marginTop: '6px' }}>
+                      Evaluation based on image-level anomaly score ({formatAnomalyScore(inspection.anomaly_score || inspection.anomalyScore)}).
+                    </p>
                   </div>
                 </div>
               ) : (
-                <div className="image-unavailable">
+                <div className="image-unavailable" style={{ padding: '24px 16px', textAlign: 'center' }}>
                   <AlertCircle size={32} />
-                  <span>No heatmap available</span>
+                  <span>Spatial Heatmap Unavailable</span>
+                  <p className="body-sm text-muted" style={{ marginTop: '6px' }}>
+                    Defect classification is based on image-level anomaly score ({formatAnomalyScore(inspection.anomaly_score || inspection.anomalyScore)}).
+                  </p>
                 </div>
               )}
             </div>

@@ -17,7 +17,7 @@ Error handling and cleanup
   heatmap_path is tracked as soon as the AI call returns it.
   On any failure after the AI call:
     - original image (final_image_path) is deleted
-    - heatmap (heatmap_path) is deleted
+    - heatmap (heatmap_path) is deleted (if created)
   On failure before the AI call but after rename:
     - final_image_path is deleted
   On failure before the rename:
@@ -121,8 +121,9 @@ def run_inspection(
             inspection_id = inspection_id,
         )
 
-        # Track heatmap immediately so cleanup can find it on later failures
-        heatmap_path = Path(ai_result["heatmap_path"])
+        # Track heatmap when available so cleanup can find it on later failures
+        raw_heatmap_path = ai_result.get("heatmap_path")
+        heatmap_path = Path(raw_heatmap_path) if raw_heatmap_path else None
 
         # ------------------------------------------------------------------
         # STEP 4 — Apply the decision engine
@@ -136,7 +137,7 @@ def run_inspection(
         placeholder_row.anomaly_score       = ai_result["anomaly_score"]
         placeholder_row.decision            = decision
         placeholder_row.original_image_path = str(final_image_path)
-        placeholder_row.heatmap_path        = str(heatmap_path)
+        placeholder_row.heatmap_path        = str(heatmap_path) if heatmap_path else ""
         placeholder_row.inference_time_ms   = ai_result["inference_time_ms"]
         placeholder_row.model_version       = ai_result["model_version"]
 
@@ -158,7 +159,7 @@ def run_inspection(
             "anomaly_score":      ai_result["anomaly_score"],
             "decision":           decision,
             "original_image_url": f"/uploads/{final_image_path.name}",
-            "heatmap_url":        f"/uploads/{heatmap_path.name}",
+            "heatmap_url":        f"/uploads/{heatmap_path.name}" if heatmap_path else None,
             "inference_time_ms":  ai_result["inference_time_ms"],
             "model_version":      ai_result["model_version"],
             "created_at":         placeholder_row.created_at.isoformat(),
@@ -198,14 +199,6 @@ def _cleanup_on_failure(
 ) -> None:
     """
     Best-effort cleanup of files belonging to a failed inspection.
-
-    Rules:
-    - If the original image was renamed to final_path, delete final_path.
-    - Otherwise delete tmp_path (rename never happened).
-    - Always delete heatmap_path if it exists (AI wrote it before failing).
-    - Never raises — cleanup failure is logged but not propagated.
-    - Never touches files from prior successful inspections because
-      each inspection has a unique ID in its filename.
     """
     if final_path:
         cleanup_file(final_path)

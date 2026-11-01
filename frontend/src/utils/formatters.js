@@ -108,17 +108,39 @@ export function generateInspectionId() {
 }
 
 /**
- * Format category label
+ * Format category label with support for standard industrial categories
  */
 export function formatCategory(category) {
   if (!category) return 'Unknown';
   
   const categoryMap = {
     'metal': 'Metal Components',
+    'metal_nut': 'Metal Nut',
+    'bottle': 'Bottle',
+    'cable': 'Cable',
+    'capsule': 'Capsule',
+    'carpet': 'Carpet',
+    'grid': 'Grid',
+    'hazelnut': 'Hazelnut',
+    'leather': 'Leather',
+    'pill': 'Pill',
+    'screw': 'Screw',
+    'tile': 'Tile',
+    'toothbrush': 'Toothbrush',
+    'transistor': 'Transistor',
+    'wood': 'Wood',
+    'zipper': 'Zipper',
     'textiles': 'Textiles',
     'electronics': 'Electronics',
     'other': 'Other'
   };
   
-  return categoryMap[category] || category;
+  const key = String(category).toLowerCase();
+  if (categoryMap[key]) {
+    return categoryMap[key];
+  }
+  
+  return String(category)
+    .replace(/[_-]/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }

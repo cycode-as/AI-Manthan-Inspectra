@@ -15,6 +15,17 @@ export const INSPECTION_STATUS = {
   NEEDS_REVIEW: 'NEEDS_REVIEW'
 };
 
+/**
+ * Normalizes the decision/status string from the backend to the frontend
+ * constant format.  The backend decision engine returns "NEEDS REVIEW"
+ * (space) but the frontend constant is "NEEDS_REVIEW" (underscore).
+ */
+export function normalizeStatus(raw) {
+  if (!raw) return raw;
+  if (raw === 'NEEDS REVIEW') return INSPECTION_STATUS.NEEDS_REVIEW;
+  return raw;
+}
+
 export const STATUS_COLORS = {
   PASS: {
     bg: 'var(--color-badge-pass-bg)',
@@ -45,7 +56,8 @@ export const DEFECT_COLORS = {
   LOW: '#16A36A'
 };
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Updated to use VITE_API_BASE_URL as per requirement
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];

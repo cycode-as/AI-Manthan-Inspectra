@@ -62,8 +62,10 @@ def root():
 
 @app.get("/health", tags=["Core"])
 def health_check():
+    from services.ai_service import get_ai_status
     return {
         "status": "healthy",
         "service": "Inspectra Backend",
         "version": "2.0.0",
+        "ai_engine": get_ai_status(),
     }

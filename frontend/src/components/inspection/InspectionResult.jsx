@@ -5,38 +5,41 @@ import StatusBadge from '../common/StatusBadge';
 import Button from '../common/Button';
 import { formatProcessingTime, formatAnomalyScore, formatDate, formatCategory } from '../../utils/formatters';
 import { INSPECTION_STATUS } from '../../utils/constants';
+import { normalizeStatus } from '../../utils/constants';
 import './InspectionResult.css';
 
 const InspectionResult = ({ result, onNewInspection }) => {
   const navigate = useNavigate();
+
+  // Normalize: backend returns `decision` (snake_case) and `anomaly_score`;
+  // mock data returns `status` and `anomalyScore`. Accept both.
+  const status       = normalizeStatus(result.decision || result.status);
+  const anomalyScore = result.anomaly_score ?? result.anomalyScore;
+  const processingTime = result.inference_time_ms ?? result.processingTime;
+  const modelVersion   = result.model_version  || result.modelVersion;
+  const timestamp      = result.created_at     || result.timestamp;
+  const inspectionId   = result.inspection_id  || result.id;
+
   const getDecisionIcon = () => {
-    switch (result.status) {
-      case INSPECTION_STATUS.PASS:
-        return CheckCircle2;
-      case INSPECTION_STATUS.REJECT:
-        return XCircle;
-      case INSPECTION_STATUS.NEEDS_REVIEW:
-        return AlertCircle;
-      default:
-        return AlertCircle;
+    switch (status) {
+      case INSPECTION_STATUS.PASS:        return CheckCircle2;
+      case INSPECTION_STATUS.REJECT:      return XCircle;
+      case INSPECTION_STATUS.NEEDS_REVIEW: return AlertCircle;
+      default:                             return AlertCircle;
     }
   };
 
   const getDecisionColor = () => {
-    switch (result.status) {
-      case INSPECTION_STATUS.PASS:
-        return 'var(--color-success)';
-      case INSPECTION_STATUS.REJECT:
-        return 'var(--color-danger)';
-      case INSPECTION_STATUS.NEEDS_REVIEW:
-        return 'var(--color-warning)';
-      default:
-        return 'var(--color-text-muted)';
+    switch (status) {
+      case INSPECTION_STATUS.PASS:         return 'var(--color-success)';
+      case INSPECTION_STATUS.REJECT:       return 'var(--color-danger)';
+      case INSPECTION_STATUS.NEEDS_REVIEW: return 'var(--color-warning)';
+      default:                             return 'var(--color-text-muted)';
     }
   };
 
   const getDecisionMessage = () => {
-    switch (result.status) {
+    switch (status) {
       case INSPECTION_STATUS.PASS:
         return 'No significant anomalies detected. Product meets quality standards.';
       case INSPECTION_STATUS.REJECT:
@@ -62,7 +65,7 @@ const InspectionResult = ({ result, onNewInspection }) => {
           <DecisionIcon size={48} strokeWidth={2} />
         </div>
         <div className="decision-content">
-          <StatusBadge status={result.status} size="large" />
+          <StatusBadge status={status} size="large" />
           <p className="decision-message body-md">{getDecisionMessage()}</p>
         </div>
       </div>
@@ -72,13 +75,13 @@ const InspectionResult = ({ result, onNewInspection }) => {
         <div className="metric-item">
           <span className="metric-label">Anomaly Score</span>
           <span className="metric-value text-mono">
-            {formatAnomalyScore(result.anomalyScore)}
+            {formatAnomalyScore(anomalyScore)}
           </span>
         </div>
         <div className="metric-item">
-          <span className="metric-label">Defects Detected</span>
+          <span className="metric-label">Prediction</span>
           <span className="metric-value text-mono">
-            {result.defectCount}
+            {result.prediction || 'N/A'}
           </span>
         </div>
         <div className="metric-item">
@@ -90,24 +93,24 @@ const InspectionResult = ({ result, onNewInspection }) => {
         <div className="metric-item">
           <span className="metric-label">Processing Time</span>
           <span className="metric-value text-mono">
-            {formatProcessingTime(result.processingTime)}
+            {formatProcessingTime(processingTime)}
           </span>
         </div>
         <div className="metric-item">
           <span className="metric-label">Model Version</span>
           <span className="metric-value text-mono">
-            {result.modelVersion}
+            {modelVersion || 'N/A'}
           </span>
         </div>
         <div className="metric-item">
           <span className="metric-label">Inspection Time</span>
           <span className="metric-value body-sm">
-            {formatDate(result.timestamp)}
+            {formatDate(timestamp)}
           </span>
         </div>
       </div>
 
-      {/* Defect Details */}
+      {/* Defect Details (only shown for mock data with bounding boxes) */}
       {result.defects && result.defects.length > 0 && (
         <div className="defect-details">
           <h3 className="heading-sm">Detected Defects</h3>
@@ -136,22 +139,26 @@ const InspectionResult = ({ result, onNewInspection }) => {
 
       {/* Actions */}
       <div className="result-actions">
-        <Button
-          variant="secondary"
-          icon={FileText}
-          size="medium"
-          onClick={() => navigate(`/report/${result.inspection_id || result.id}`)}
-        >
-          View Full Report
-        </Button>
-        <Button
-          variant="secondary"
-          icon={Download}
-          size="medium"
-          onClick={() => navigate(`/report/${result.inspection_id || result.id}`)}
-        >
-          Download Report
-        </Button>
+        {inspectionId && (
+          <>
+            <Button
+              variant="secondary"
+              icon={FileText}
+              size="medium"
+              onClick={() => navigate(`/report/${inspectionId}`)}
+            >
+              View Full Report
+            </Button>
+            <Button
+              variant="secondary"
+              icon={Download}
+              size="medium"
+              onClick={() => navigate(`/report/${inspectionId}`)}
+            >
+              Download Report
+            </Button>
+          </>
+        )}
         <Button
           variant="primary"
           icon={RefreshCw}
